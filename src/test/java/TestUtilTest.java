@@ -1,3 +1,4 @@
+import com.back.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ public class TestUtilTest {
     }
 
     @Test
-    @DisplayName("TestUtil.setOutToByteArray()")
+    @DisplayName("com.back.TestUtil.setOutToByteArray()")
     void t2() throws IOException {
         ByteArrayOutputStream outputStream = TestUtil.setOutToByteArray();
 
