@@ -1,14 +1,15 @@
-import java.io.BufferedInputStream;
+import com.back.App;
+
 import java.io.ByteArrayOutputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main{
     public static void main(String[] args){
+        App app = new App(new Scanner(System.in));
+        app.run();
 //        experiment1();
-        experiment2();
+//        experiment2();
     }
 
     public static void experiment1(){
