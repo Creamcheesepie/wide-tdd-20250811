@@ -8,8 +8,8 @@ public class AppTestRunner {
     public static String appRun(String input){
         Scanner sc = TestUtil.genScanner(input);
         ByteArrayOutputStream outputStream = TestUtil.setOutToByteArray();
-        new App(sc).run();
 
+        new App(sc).run();
         return outputStream.toString();
     }
 }

@@ -1,5 +1,7 @@
 package com.back;
 
+import com.back.domain.wiseSaying.controller.WiseSayingController;
+
 import java.util.Scanner;
 
 public class App {
