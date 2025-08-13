@@ -2,10 +2,8 @@ package com.back.standard.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class Util {
     // 이너 클래스. static을 사용하는 이유는 Util에서 바로 접근해서 사용할 수 있도록 하기 위해서이다.
@@ -51,11 +49,27 @@ public class Util {
             return Files.exists(Paths.get(filePath));
         }
 
-        public static void delete(String filePath) {
+        private static class FileDeleteVisitor extends SimpleFileVisitor<Path> {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        }
+
+
+        public static boolean delete(String filePath) {
             try {
-                Files.delete(Paths.get(filePath));
+                Files.walkFileTree(getPath(filePath), new FileDeleteVisitor());
+                return true;
             } catch (IOException e) {
-                throw new RuntimeException("파일 삭제 실패 : " + filePath, e);
+                return false;
             }
         }
     }
