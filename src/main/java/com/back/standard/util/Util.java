@@ -9,29 +9,58 @@ import java.nio.file.StandardOpenOption;
 
 public class Util {
     // 이너 클래스. static을 사용하는 이유는 Util에서 바로 접근해서 사용할 수 있도록 하기 위해서이다.
-    public static class file{  // 소문자 사용 이유 : 실제 Java 클래스와 중복되어 불편함
-
+    public static class file {  // 소문자 사용 이유 : 실제 Java 클래스와 중복되어 불편함
+        private static Path getPath(String filePath) {
+            return Paths.get(filePath);
+        }
 
         public static void touch(String filePath) {
-            Path path = Paths.get(filePath);
-            String content = "Hello, Java NIO!";
+            set(filePath, "");
+        }
 
+        public static void set(String filePath, String content) {
+            Path path = getPath(filePath);
             try {
-                Files.write(path, content.getBytes(),
-                        StandardOpenOption.CREATE, // 없으면 생성
-                        StandardOpenOption.TRUNCATE_EXISTING); // 기존 내용 덮어쓰기
-                System.out.println("파일 생성 및 쓰기 완료");
+                writeFile(path, content);
             } catch (IOException e) {
-                e.printStackTrace();
+                handleFileWriteError(path, content, e);
+            }
+        }
+
+        private static void writeFile(Path path, String content) throws IOException {
+            Files.writeString(path, content,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        }
+
+        private static void handleFileWriteError(Path path, String content, IOException e) {
+            Path parentDir = path.getParent();
+            if (parentDir != null && Files.notExists(parentDir)) {
+                try {
+                    Files.createDirectories(parentDir);
+                    writeFile(path, content);
+                } catch (IOException ex) {
+                    throw new RuntimeException("파일 쓰기 실패: " + path, ex);
+                }
+            } else {
+                throw new RuntimeException("파일 접근 실패: " + path, e);
             }
         }
 
         public static boolean exists(String filePath) {
             return Files.exists(Paths.get(filePath));
         }
+
+        public static void delete(String filePath) {
+            try {
+                Files.delete(Paths.get(filePath));
+            } catch (IOException e) {
+                throw new RuntimeException("파일 삭제 실패 : " + filePath, e);
+            }
+        }
     }
 
-    public static class json{
+    public static class json {
 
     }
 }
